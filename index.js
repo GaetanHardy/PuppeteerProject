@@ -24,8 +24,9 @@ const getGoogleLinks = async () => {
   searchResults = await page.$$eval(".LC20lb", els => 
     els.map(e => ({title: e.innerText, link: e.parentNode.href}))
   );
+  await page.close();
 
-  await browser.close();
+  // await browser.close();
 }
 
 const getEmailFromPages = async (link) => {
@@ -34,8 +35,10 @@ const getEmailFromPages = async (link) => {
   await page.goto(link);
 
   console.log(link);
-
-  await browser.close();
+ 
+  await page.close();
+  
+  // await browser.close();
 }
 
 const main = async () => {
