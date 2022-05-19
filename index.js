@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 
 let browser = null;
-const wordToSearch = "Coucou";
+const wordToSearch = "immobilier commercial";
 let searchResults = [];
 
 const getGoogleLinks = async () => {
@@ -24,31 +24,35 @@ const getGoogleLinks = async () => {
   searchResults = await page.$$eval(".LC20lb", els => 
     els.map(e => ({title: e.innerText, link: e.parentNode.href}))
   );
-  await page.close();
 
-  // await browser.close();
+  await page.close();
 }
 
 const getEmailFromPages = async (link) => {
-  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   await page.goto(link);
+  // https://trello.com/b/4JMEhTfo/m08
+  console.log(link) //http//[]'https:', 'trello.com/b/4JMEhTfo/m08';
 
-  console.log(link);
- 
-  await page.close();
+  let service = link.split("//")[1].split("/")[0];
   
-  // await browser.close();
+
+  if(service.includes("www")) {
+    service = service.split("www.")[1]
+  } 
+  console.log(service);
+  
+  await page.close();
 }
 
 const main = async () => {
-  browser = await puppeteer.launch({ headless: false });
+  browser = await puppeteer.launch();
 
   await getGoogleLinks();
 
-  searchResults.forEach(async (page) => {
-    await getEmailFromPages(page.link);
-  })
+  for(let i=0; i < searchResults.length; i++) {
+    await getEmailFromPages(searchResults[i].link);
+  }
 
   await browser.close();
 }
