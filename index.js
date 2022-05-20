@@ -5,6 +5,49 @@ const wordToSearch = "agence immobiliere";
 let searchResults = [];
 const emailsFound = []
 
+const normalizeEmails = async (text) => {
+  const phrase = text.split("/n").filter((word) => word.includes("@")).join(" ")
+  emails = phrase.split(' ').filter((word) => word.includes("@")).map((email) => 
+    email.split("\n").filter((e) => e.includes("@")).join(" ")
+  )
+
+  emails = emails.map((email) => {
+    let emailNormalize = email.replaceAll("(", "").replaceAll(")", "");
+    if(emailNormalize.charAt(emailNormalize.length - 1) === '.') {
+      emailNormalize = emailNormalize.substring(0, emailNormalize.length - 1);
+    }
+    return emailNormalize;
+  })
+
+  return emails
+}
+
+const getEmailFromPage = async (page) => {
+  
+  // Récupère toutes les div de la page 
+  const divHTML = await page.$$('div');
+  
+  // On regarde pour chaque div récupérer
+  for (var i=0; i < divHTML.length; i++) {
+    // on récupère le texte de chaque div
+    let valueHandle = await divHTML[i].getProperty('innerText');
+    let linkText = await valueHandle.jsonValue();
+    const text = !!linkText ? getText(linkText) : undefined;
+
+    // Si le texte existe et qu'il contient le symbole @
+    if(!!text && text.includes('@')) {
+      const emails = await normalizeEmails(text);
+
+      emails.forEach((email) => {
+        if(!emailsFound.includes(email)) {
+          emailsFound.push(email)
+        }
+      })
+    }
+  }
+
+}
+
 const getGoogleLinks = async () => {
   const page = await browser.newPage();
   await page.goto("https://www.google.com/", {waitUntil: "domcontentloaded"});
@@ -52,28 +95,8 @@ const getEmailFromPages = async (link) => {
   }
 
   // Get email
-  const links = await page.$$('div')
-  for (var i=0; i < links.length; i++) {
-    let valueHandle = await links[i].getProperty('innerText');
-    let linkText = await valueHandle.jsonValue();
-    const text = !!linkText ? getText(linkText) : undefined;
-    if(!!text && text.includes('@')) {
-      const phrase = text.split("/n").filter((word) => word.includes("@")).join(" ")
-      const emails = phrase.split(' ').filter((word) => word.includes("@")).map((email) => {
-        const normalizeEmail = email.split("\n");
-        return normalizeEmail.filter((e) => e.includes("@")).join(" ")
-      })
-      emails.forEach((email) => {
-        const emailN = email.replaceAll("(", "").replaceAll(")", "")
-        if(!emailsFound.includes(emailN)) {
-          emailsFound.push(emailN)
-        }
-      })
-    }
-  }
+  await getEmailFromPage(page);
 
-  console.log(emailsFound)
-  
   await page.close();
 }
 
