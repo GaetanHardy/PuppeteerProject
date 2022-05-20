@@ -10,8 +10,8 @@ L'objectif du projet est de pouvoir récupérer des adresses de service présent
 
 <h2> Technologies utilisées </h2>
 - Puppeteer </br>
-- Node.js
-- Express JS
+- Node.js </br>
+- Express JS </br>
 - excel4node
 
 <h2> Fonctionnement </h2>
