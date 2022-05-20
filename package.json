@@ -1,9 +1,0 @@
-{
-  "name": "workspace",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "dependencies": {
-    "puppeteer": "^14.1.0"
-  }
-}
