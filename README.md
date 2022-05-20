@@ -9,7 +9,7 @@ Trello du projet : https://trello.com/b/4JMEhTfo/m08
 L'objectif du projet est de pouvoir récupérer des adresses de service présentes sur un nombre de sites web définis par l'utilisateur et regrouper les adresses récupérées en fonction de leur site d'origine.
 
 <h2> Technologies utilisées </h2>
-- Puppeteer\n
+- Puppeteer </br>
 - Node.js
 - Express JS
 - excel4node
