@@ -12,6 +12,7 @@ input {
   	scrollbar-color: gray;
   	scrollbar-width: thin;
   	margin-bottom: 2em;
+	padding-left: 1em;
 }
 
 .button {
