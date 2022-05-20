@@ -1,0 +1,36 @@
+input {
+	margin-bottom: 1em;
+	padding: 5px;
+}
+
+.result{
+	width: 500px;
+	min-height: 50px;
+	max-height: 300px;
+	border: solid;
+	overflow-y: scroll;
+  	scrollbar-color: gray;
+  	scrollbar-width: thin;
+}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  cursor: pointer;
+}
+
+.button:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.button:active {
+  background-color: #63e368;
+}
