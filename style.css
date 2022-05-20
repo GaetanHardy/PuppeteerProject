@@ -11,6 +11,7 @@ input {
 	overflow-y: scroll;
   	scrollbar-color: gray;
   	scrollbar-width: thin;
+  	margin-bottom: 2em;
 }
 
 .button {
@@ -33,4 +34,17 @@ input {
 
 .button:active {
   background-color: #63e368;
+}
+
+.button2{
+  background-color: #008CBA;
+}
+
+.button2:active {
+  background-color: #008CBA;
+}
+
+ .disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
