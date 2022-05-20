@@ -1,8 +1,9 @@
 const puppeteer = require('puppeteer');
 
 let browser = null;
-const wordToSearch = "immobilier commercial";
+const wordToSearch = "agence immobiliere";
 let searchResults = [];
+const emailsFound = []
 
 const getGoogleLinks = async () => {
   const page = await browser.newPage();
@@ -28,31 +29,63 @@ const getGoogleLinks = async () => {
   await page.close();
 }
 
+function getText(linkText) {
+  linkText = linkText.replace(/\r\n|\r/g, "\n");
+  linkText = linkText.replace(/\ +/g, " ");
+
+  // Replace &nbsp; with a space 
+  var nbspPattern = new RegExp(String.fromCharCode(160), "g");
+  return linkText.replace(nbspPattern, " ");
+}
+
 const getEmailFromPages = async (link) => {
   const page = await browser.newPage();
   await page.goto(link);
-  // https://trello.com/b/4JMEhTfo/m08
-  console.log(link) //http//[]'https:', 'trello.com/b/4JMEhTfo/m08';
+  console.log("----------------------")
+  console.log(link)
 
+  // Get service
   let service = link.split("//")[1].split("/")[0];
   
-
-  if(service.includes("www")) {
+  if (service.includes("www")) {
     service = service.split("www.")[1]
-  } 
-  console.log(service);
+  }
+
+  // Get email
+  const links = await page.$$('div')
+  for (var i=0; i < links.length; i++) {
+    let valueHandle = await links[i].getProperty('innerText');
+    let linkText = await valueHandle.jsonValue();
+    const text = !!linkText ? getText(linkText) : undefined;
+    if(!!text && text.includes('@')) {
+      const phrase = text.split("/n").filter((word) => word.includes("@")).join(" ")
+      const emails = phrase.split(' ').filter((word) => word.includes("@")).map((email) => {
+        const normalizeEmail = email.split("\\n");
+        return normalizeEmail.filter((e) => e.includes("@")).join(" ")
+      })
+      emails.forEach((email) => {
+        if(!emailsFound.includes(email)) {
+          emailsFound.push(email)
+        }
+      })
+    }
+  }
+
+  console.log(emailsFound)
   
   await page.close();
 }
 
 const main = async () => {
-  browser = await puppeteer.launch();
+  browser = await puppeteer.launch()
 
   await getGoogleLinks();
 
   for(let i=0; i < searchResults.length; i++) {
     await getEmailFromPages(searchResults[i].link);
   }
+
+  console.log("FINAl", emailsFound)
 
   await browser.close();
 }
