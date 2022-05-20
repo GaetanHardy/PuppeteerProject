@@ -60,12 +60,13 @@ const getEmailFromPages = async (link) => {
     if(!!text && text.includes('@')) {
       const phrase = text.split("/n").filter((word) => word.includes("@")).join(" ")
       const emails = phrase.split(' ').filter((word) => word.includes("@")).map((email) => {
-        const normalizeEmail = email.split("\\n");
+        const normalizeEmail = email.split("\n");
         return normalizeEmail.filter((e) => e.includes("@")).join(" ")
       })
       emails.forEach((email) => {
-        if(!emailsFound.includes(email)) {
-          emailsFound.push(email)
+        const emailN = email.replaceAll("(", "").replaceAll(")", "")
+        if(!emailsFound.includes(emailN)) {
+          emailsFound.push(emailN)
         }
       })
     }
